@@ -114,13 +114,14 @@ torch.manual_seed(0)
 x = torch.randn(3, requires_grad=True)
 print('x: {}'.format(x))
 
-y = x * 2
+#y = (x*2).clone().detach().requires_grad_(True)
+y = x*2
 cnt = 0
 while y.data.norm() < 1000:
     #print('cnt {}, norm of y: {}'.format(cnt, y.data.norm()))
     cnt += 1
     y = y * 2
-    
+   
 print('y: {}'.format(y))
 print('final norm of y: {}'.format(y.data.norm()))
 
@@ -128,10 +129,11 @@ print('final norm of y: {}'.format(y.data.norm()))
 #
 gradients = torch.tensor([0.1, 1.0, 0.0001], dtype=torch.float)
 y.backward(gradients, retain_graph=True) # no need to care of the layers beyound y if gradients are given already
-#y.backward(gradients, retain_graph=True) # can be called multiple times if retain_graph=True
 
 print('y: {}'.format(y))
-print('grad on x: {}'.format(x.grad))
+#print('grad on y: {}'.format(y.grad.data))
+print('x: {}'.format(x))
+print('grad on x: {}'.format(x.grad.data))
 
 ###############################################################
 # You can also stop autograd from tracking history on Tensors
