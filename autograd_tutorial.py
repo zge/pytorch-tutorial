@@ -54,34 +54,38 @@ import torch
 ###############################################################
 # Create a tensor and set requires_grad=True to track computation with it
 x = torch.ones(2, 2, requires_grad=True)
-print(x)
+print('x: {}'.format(x))
 
 ###############################################################
 # Do an operation of tensor:
 y = x + 2
-print(y)
+print('y: {}'.format(y))
 
 ###############################################################
 # ``y`` was created as a result of an operation, so it has a ``grad_fn``.
-print(y.grad_fn)
+print('grad function of y: {}'.format(y.grad_fn))
 
 ###############################################################
 # Do more operations on y
 z = y * y * 3
+print('grad function of z: {}'.format(z.grad_fn))
 out = z.mean()
+print('grad function of out: {}'.format(out.grad_fn))
 
-print(z, out)
+print('z: {}, out: {}'.format(z, out))
 
 ################################################################
 # ``.requires_grad_( ... )`` changes an existing Tensor's ``requires_grad``
 # flag in-place. The input flag defaults to ``False`` if not given.
-a = torch.randn(2, 2)
-a = ((a * 3) / (a - 1))
-print(a.requires_grad)
-a.requires_grad_(True)
-print(a.requires_grad)
-b = (a * a).sum()
-print(b.grad_fn)
+#torch.manual_seed(0)
+#a = torch.randn(2, 2)
+#a = ((a * 3) / (a - 1))
+#print(a)
+#print(a.requires_grad)
+#a.requires_grad_(True)
+#print(a.requires_grad)
+#b = (a * a).sum()
+#print(b.grad_fn)
 
 ###############################################################
 # Gradients
@@ -90,13 +94,16 @@ print(b.grad_fn)
 # Because ``out`` contains a single scalar, ``out.backward()`` is
 # equivalent to ``out.backward(torch.tensor(1))``.
 
-out.backward()
+out.backward(retain_graph=True)
 
 ###############################################################
 # print gradients d(out)/dx
-#
 
+print('x: {}'.format(x))
 print(x.grad)
+# need to cleanup the gradients, o.w. it will accumulate if 
+# running backward() multiple times
+x.grad.data.zero_(); 
 
 ###############################################################
 # You should have got a matrix of ``4.5``. Let’s call the ``out``
@@ -134,6 +141,7 @@ print('y: {}'.format(y))
 #print('grad on y: {}'.format(y.grad.data))
 print('x: {}'.format(x))
 print('grad on x: {}'.format(x.grad.data))
+#x.grad.data.zero_();
 
 ###############################################################
 # You can also stop autograd from tracking history on Tensors
