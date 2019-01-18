@@ -77,15 +77,15 @@ print('z: {}, out: {}'.format(z, out))
 ################################################################
 # ``.requires_grad_( ... )`` changes an existing Tensor's ``requires_grad``
 # flag in-place. The input flag defaults to ``False`` if not given.
-#torch.manual_seed(0)
-#a = torch.randn(2, 2)
-#a = ((a * 3) / (a - 1))
-#print(a)
-#print(a.requires_grad)
-#a.requires_grad_(True)
-#print(a.requires_grad)
-#b = (a * a).sum()
-#print(b.grad_fn)
+torch.manual_seed(0)
+a = torch.randn(2, 2)
+a = ((a * 3) / (a - 1))
+print(a)
+print(a.requires_grad)
+a.requires_grad_(True)
+print(a.requires_grad)
+b = (a * a).sum()
+print(b.grad_fn)
 
 ###############################################################
 # Gradients
@@ -101,9 +101,9 @@ out.backward(retain_graph=True)
 
 print('x: {}'.format(x))
 print(x.grad)
-# need to cleanup the gradients, o.w. it will accumulate if 
+# need to cleanup the gradients, o.w. it will accumulate if
 # running backward() multiple times
-x.grad.data.zero_(); 
+x.grad.data.zero_();
 
 ###############################################################
 # You should have got a matrix of ``4.5``. Let’s call the ``out``
